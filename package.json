@@ -1,0 +1,78 @@
+{
+  "name": "dsh-huabu",
+  "version": "0.1.0",
+  "description": "Huabu outer capabilities for DeepSeek Harness: media generation, asset library, blockout previz, video understanding",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": { "default": "./lib/client.js" },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml",
+    "skills",
+    "locale",
+    "README.md"
+  ],
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "external": []
+    }
+  },
+  "engines": {
+    "node": ">=20",
+    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test:blockout": "node src/blockout/selftest.mjs",
+    "test:service": "node scripts/test-blockout-service.mjs",
+    "test:tool": "node scripts/test-blockout-tool.mjs",
+    "test:skills": "node scripts/test-skills.mjs",
+    "test:card": "node scripts/test-card.mjs",
+    "check:drift": "node scripts/check-drift.mjs",
+    "probe:ui": "node scripts/ui-probe.mjs",
+    "probe:theme": "node scripts/ui-probe.mjs --theme"
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "~3.18.5"
+  },
+  "devDependencies": {
+    "@deepseek-ai/cordis": "~4.0.5",
+    "@types/react": "^19.3.0",
+    "esbuild": "^0.25.12",
+    "typescript": "^5.9.3"
+  },
+  "optionalDependencies": {
+    "ffmpeg-static": "^5.3.0"
+  },
+  "dshhub": {
+    "schemaVersion": 1,
+    "displayName": "Huabu 画布能力",
+    "summary": "在 DSH 里做视觉项目：图片/视频生成、素材库、确定性粗模运镜预演、视频抽帧理解。",
+    "categories": ["媒体", "视觉", "工具"],
+    "surfaces": ["host", "web"],
+    "capabilities": {
+      "provides": ["service:huabu.media", "service:huabu.assets", "service:huabu.blockout"]
+    },
+    "compatibility": { "dsh": ">=0.2.0-rc.1 <0.3.0-0", "node": ">=20" },
+    "permissions": {
+      "network": [
+        "https://dashscope.aliyuncs.com",
+        "https://ark.cn-beijing.volces.com",
+        "https://open.volcengineapi.com",
+        "https://api.minimaxi.com",
+        "https://hunyuan.tencentcloudapi.com",
+        "https://api.openai.com",
+        "https://fal.run",
+        "https://queue.fal.run"
+      ]
+    }
+  }
+}

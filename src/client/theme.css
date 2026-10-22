@@ -1,0 +1,502 @@
+/*
+ * dsh-huabu 样式基线（A6）。
+ * 颜色只用宿主主题令牌 --dsw-alias-* / --dsw-static-*：令牌定义在 body 与
+ * body[data-ds-dark-theme] 上，随宿主浅/深色自动切换；--huabu-* 只放布局尺寸。
+ * 由 client apply 注入 <style id="dsh-huabu-theme">，类名统一 huabu- 前缀。
+ */
+
+.huabu-probe-card {
+  --huabu-probe-thumb: 96px;
+  --huabu-probe-gap: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--huabu-probe-gap);
+  padding: 8px 12px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.huabu-probe-title {
+  flex-basis: 100%;
+  color: var(--dsw-alias-label-primary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.huabu-probe-meta {
+  flex-basis: 100%;
+  min-width: 0;
+  color: var(--dsw-alias-label-secondary);
+  word-break: break-all;
+}
+
+.huabu-probe-grid {
+  display: flex;
+  flex-basis: 100%;
+  gap: var(--huabu-probe-gap);
+}
+
+.huabu-probe-img {
+  display: block;
+  width: var(--huabu-probe-thumb);
+  height: var(--huabu-probe-thumb);
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-bg-layer-2);
+  object-fit: cover;
+}
+
+body[data-ds-dark-theme] .huabu-probe-img {
+  border-color: var(--dsw-alias-border-l3);
+}
+
+.huabu-probe-error {
+  flex-basis: 100%;
+  color: var(--dsw-alias-state-error-primary);
+  word-break: break-all;
+}
+
+.huabu-probe-dump {
+  flex-basis: 100%;
+  min-width: 0;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.huabu-probe-dump > summary {
+  cursor: pointer;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.huabu-probe-dump pre {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--dsw-alias-label-secondary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+}
+
+.huabu-nav-icon {
+  display: block;
+  flex: none;
+}
+
+.huabu-panel {
+  --huabu-panel-header-min-height: 52px;
+  --huabu-panel-inline-pad: 20px;
+  --huabu-panel-body-pad: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--dsw-alias-bg-base);
+  color: var(--dsw-alias-label-primary);
+}
+
+.huabu-panel-header {
+  box-sizing: border-box;
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: var(--huabu-panel-header-min-height);
+  padding: 0 var(--huabu-panel-inline-pad);
+  border-bottom: 0.5px solid var(--dsw-alias-border-l3);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* 宿主对 button 有主题态覆盖规则，这里用父类 + 元素提高特异性 */
+.huabu-panel button.huabu-panel-back {
+  padding: 2px 6px;
+  border: none;
+  border-radius: var(--dsw-radius-sm);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.huabu-panel button.huabu-panel-back:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.huabu-panel button.huabu-panel-back:active {
+  background: var(--dsw-alias-interactive-bg-active);
+}
+
+.huabu-panel button.huabu-panel-back:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary);
+  outline-offset: 2px;
+}
+
+.huabu-panel-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 0;
+  padding: var(--huabu-panel-body-pad);
+}
+
+.huabu-panel-placeholder {
+  color: var(--dsw-alias-label-primary);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.huabu-panel-hint {
+  max-width: 460px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.huabu-panel-hint code,
+.huabu-settings-row code {
+  padding: 1px 5px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: 4px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 0.92em;
+}
+
+.huabu-settings-section {
+  --huabu-settings-gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--huabu-settings-gap);
+  max-width: 720px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.huabu-settings-title {
+  color: var(--dsw-alias-label-primary);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.huabu-settings-row {
+  color: var(--dsw-alias-label-secondary);
+}
+
+/* ── B6：huabu_blockout 工具卡 ───────────────────────────── */
+
+.huabu-blockout-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 360px;
+  overflow-y: auto;
+  padding: 8px 12px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.huabu-bk-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.huabu-bk-tool {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.huabu-bk-action {
+  padding: 0 6px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: 999px;
+  color: var(--dsw-alias-label-primary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+}
+
+.huabu-bk-status {
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.huabu-bk-status[data-tone="ok"] {
+  color: var(--dsw-alias-state-success-primary);
+}
+
+.huabu-bk-status[data-tone="warn"] {
+  color: var(--dsw-alias-state-warn-primary);
+}
+
+.huabu-bk-status[data-tone="error"] {
+  color: var(--dsw-alias-state-error-primary);
+}
+
+.huabu-bk-status[data-tone="busy"] {
+  color: var(--dsw-alias-state-business-primary);
+}
+
+.huabu-bk-status[data-tone="muted"] {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.huabu-bk-scene {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dsw-alias-label-tertiary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.huabu-bk-hint {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.huabu-bk-note {
+  color: var(--dsw-alias-label-secondary);
+  word-break: break-word;
+}
+
+.huabu-bk-error {
+  color: var(--dsw-alias-state-error-primary);
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.huabu-bk-params {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  min-width: 0;
+}
+
+.huabu-bk-param {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.huabu-bk-param-key {
+  flex: none;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.huabu-bk-param code {
+  overflow: hidden;
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.huabu-bk-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.huabu-bk-img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 240px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-bg-layer-2);
+  object-fit: contain;
+}
+
+body[data-ds-dark-theme] .huabu-bk-img {
+  border-color: var(--dsw-alias-border-l3);
+}
+
+.huabu-bk-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+.huabu-bk-chip {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 0 6px;
+  border: 0.5px solid var(--dsw-alias-border-l1);
+  border-radius: var(--dsw-radius-sm);
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.huabu-bk-chip-label {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+}
+
+.huabu-bk-chip-value {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 500;
+}
+
+.huabu-bk-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.huabu-bk-table th,
+.huabu-bk-table td {
+  padding: 3px 6px;
+  border-bottom: 0.5px solid var(--dsw-alias-border-l1);
+  text-align: left;
+}
+
+.huabu-bk-table th {
+  color: var(--dsw-alias-label-tertiary);
+  font-weight: 500;
+}
+
+.huabu-bk-table td {
+  color: var(--dsw-alias-label-secondary);
+}
+
+.huabu-bk-issues {
+  padding: 2px 0 2px 8px;
+  border-left: 2px solid var(--dsw-alias-state-error-primary);
+}
+
+.huabu-bk-issues[data-level="warn"] {
+  border-left-color: var(--dsw-alias-state-warn-primary);
+}
+
+.huabu-bk-issues-title {
+  color: var(--dsw-alias-state-error-primary);
+  font-weight: 500;
+}
+
+.huabu-bk-issues[data-level="warn"] .huabu-bk-issues-title {
+  color: var(--dsw-alias-state-warn-primary);
+}
+
+.huabu-bk-issues ul {
+  margin: 2px 0 0;
+  padding-left: 16px;
+}
+
+.huabu-bk-issues li {
+  color: var(--dsw-alias-label-secondary);
+  word-break: break-word;
+}
+
+.huabu-bk-progress {
+  position: relative;
+  overflow: hidden;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.huabu-bk-progress-bar {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 38%;
+  border-radius: inherit;
+  background: var(--dsw-alias-state-business-primary);
+  animation: huabu-bk-progress 1.2s ease-in-out infinite;
+}
+
+@keyframes huabu-bk-progress {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(265%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .huabu-bk-progress-bar {
+    width: 100%;
+    opacity: 0.45;
+    animation: none;
+  }
+}
+
+.huabu-bk-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.huabu-blockout-card button.huabu-bk-button {
+  flex: none;
+  padding: 2px 8px;
+  border: 0.5px solid var(--dsw-alias-border-l2);
+  border-radius: var(--dsw-radius-sm);
+  background: transparent;
+  color: var(--dsw-alias-label-secondary);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.huabu-blockout-card button.huabu-bk-button:hover {
+  background: var(--dsw-alias-interactive-bg-hover);
+  color: var(--dsw-alias-label-primary);
+}
+
+.huabu-blockout-card button.huabu-bk-button:active {
+  background: var(--dsw-alias-interactive-bg-active);
+}
+
+.huabu-bk-details {
+  flex: 1 1 100%;
+  min-width: 0;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.huabu-bk-details > summary {
+  cursor: pointer;
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.huabu-bk-details pre {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--dsw-alias-label-secondary);
+  font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", monospace;
+  font-size: 11px;
+  white-space: pre-wrap;
+}
