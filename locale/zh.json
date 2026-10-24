@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "settings": {
+    "title": "Huabu 画布能力",
+    "subtitle": "媒体生成 · 素材库 · blockout 运镜预演 · 视频理解",
+    "versionTitle": "版本与兼容",
+    "providersTitle": "媒体供应商与凭据",
+    "ffmpegTitle": "ffmpeg（视频理解 / blockout 成片 / mock 视频）",
+    "togglesTitle": "开关（workspace.json / 插件配置）",
+    "skillsTitle": "技能",
+    "permissionsTitle": "出网权限（媒体网关白名单）",
+    "installTitle": "安装"
+  }
+}

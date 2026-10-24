@@ -17,6 +17,7 @@ import { useAttachmentImages } from './attachments'
 import { BlockoutCard } from './blockout-card'
 import { ImageCard } from './image-card'
 import { MediaJobCard } from './video-card'
+import { HuabuSettingsSection, SETTINGS_EN, SETTINGS_ZH, SETTINGS_LOCALE_NS } from './settings'
 
 // layout 服务由宿主 ui-layout 提供（面板切换用），必须先 inject 才能访问 ctx.layout
 export const inject = ['slots', 'locale', 'layout']
@@ -139,20 +140,6 @@ function HuabuPanel(props: Any) {
 }
 
 /* ── A5：设置分区内容（导航行由宿主 ui-settings 壳渲染，我们只交内容） ── */
-function HuabuSettings() {
-  return (
-    <div className="huabu-settings-section" data-huabu-settings={PANEL_ID}>
-      <div className="huabu-settings-title">Huabu 画布能力</div>
-      <div className="huabu-settings-row">
-        A5 占位分区。G1 收尾时补齐：供应商状态、ffmpeg 探测、确认开关、技能重装、权限白名单、安装命令。
-      </div>
-      <div className="huabu-settings-row">
-        全局面板 id：<code>huabu</code>（侧栏入口与中栏面板共用同一常量）
-      </div>
-    </div>
-  )
-}
-
 export function apply(ctx: Any): void {
   injectTheme()
 
@@ -195,7 +182,13 @@ export function apply(ctx: Any): void {
       HuabuPanelIcon,
     ))
 
-  // A5 · G4e：设置分区（list 槽）——导航行由 ui-settings 按 id/order/label 生成
-  ctx.slots.inject('settings.section', () =>
-    ctx.slots.register({ name: 'settings.section', id: PANEL_ID, order: SETTINGS_ORDER, label: 'Huabu' }, HuabuSettings))
+  // A5 · G4e：设置分区（list 槽）；G1 实装内容 + G2 双语字典
+  ctx.slots.inject('settings.section', () => {
+    ctx.locale?.register?.(SETTINGS_LOCALE_NS, { zh: SETTINGS_ZH, en: SETTINGS_EN })
+    const t = ctx.locale?.bind ? ctx.locale.bind(SETTINGS_LOCALE_NS) : (key: string) => (SETTINGS_ZH as Record<string, unknown>)[key]
+    return ctx.slots.register(
+      { name: 'settings.section', id: PANEL_ID, order: SETTINGS_ORDER, label: 'Huabu' },
+      () => <HuabuSettingsSection t={t} />,
+    )
+  })
 }

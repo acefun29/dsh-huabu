@@ -551,3 +551,59 @@ body[data-ds-dark-theme] .huabu-bk-img {
   border-radius: var(--huabu-card-radius, 8px);
   background: var(--dsw-alias-bg-sunken, transparent);
 }
+
+
+/* ── G1 设置分区实装样式 ── */
+
+.huabu-settings-subtitle {
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+}
+
+.huabu-settings-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-sunken, transparent);
+}
+
+.huabu-settings-card-title {
+  color: var(--dsw-alias-label-primary);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.huabu-settings-hint {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.huabu-settings-list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--dsw-alias-label-secondary);
+  font-size: 12px;
+  line-height: 1.8;
+}
+
+.huabu-settings-table {
+  border-collapse: collapse;
+  font-size: 12px;
+  color: var(--dsw-alias-label-secondary);
+}
+
+.huabu-settings-table th,
+.huabu-settings-table td {
+  text-align: left;
+  padding: 3px 10px 3px 0;
+  border-bottom: 1px solid var(--dsw-alias-border-subtle);
+}
+
+.huabu-settings-table th {
+  color: var(--dsw-alias-label-tertiary);
+  font-weight: 500;
+}

@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "settings": {
+    "title": "Huabu Canvas Capabilities",
+    "subtitle": "Media generation · Asset library · Blockout previz · Video understanding",
+    "versionTitle": "Version & compatibility",
+    "providersTitle": "Media providers & credentials",
+    "ffmpegTitle": "ffmpeg (video understanding / blockout rendering / mock video)",
+    "togglesTitle": "Switches (workspace.json / plugin config)",
+    "skillsTitle": "Skills",
+    "permissionsTitle": "Network permissions (media gateway allowlist)",
+    "installTitle": "Install"
+  }
+}
