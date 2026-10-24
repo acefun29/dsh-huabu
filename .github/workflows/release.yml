@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: 全部门禁（typecheck/build/引擎/漂移/全部单测/体积守卫/兼容冒烟）
+        run: node scripts/test-all.mjs
+      - name: 打包 tarball
+        run: npm pack
+      - name: 创建 Release 并附 tarball
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          gh release create "$TAG" dsh-huabu-*.tgz \
+            --title "dsh-huabu $TAG" \
+            --generate-notes \
+            --notes "安装：dsh plugin --profile <profile> add https://github.com/acefun29/dsh-huabu/releases/download/$TAG/dsh-huabu-0.1.0.tgz"

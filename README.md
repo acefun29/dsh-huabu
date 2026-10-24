@@ -75,10 +75,20 @@ pnpm check:drift    # src/blockout 与 sha256 清单 / 上游的一致性
 
 测试需要 PATH 可见的 ffmpeg（视频理解与 mock 视频用；Windows `winget install ffmpeg` 即可）。
 
-## 安装到 DSH（web profile，开发验证用）
+## 安装到 DSH
+
+**从 GitHub Release 安装（推荐）**——每个版本附带 npm 打包的 tarball：
 
 ```powershell
-dsh plugin --profile web add link:<本目录绝对路径>
+# 指定版本
+dsh plugin --profile <profile> add https://github.com/acefun29/dsh-huabu/releases/download/v0.1.0/dsh-huabu-0.1.0.tgz
+# 或始终跟最新版（资产名带版本号，latest 短链需先到 Releases 页查看文件名）
 ```
 
-或从 npm 安装（发布后）：`dsh plugin --profile web add dsh-huabu`。
+**开发调试（本地目录直连）**：
+
+```powershell
+dsh plugin --profile <profile> add link:<本目录绝对路径>
+```
+
+发布流程：打 tag `v*` 推送 → GitHub Actions 跑全部门禁 → 自动建 Release 并附 `dsh-huabu-<版本>.tgz`。

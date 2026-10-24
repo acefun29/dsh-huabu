@@ -5,8 +5,12 @@
   "type": "module",
   "main": "lib/index.js",
   "exports": {
-    ".": { "default": "./lib/index.js" },
-    "./client": { "default": "./lib/client.js" },
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": {
+      "default": "./lib/client.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
@@ -18,7 +22,9 @@
   ],
   "dsh": {
     "manifestVersion": 1,
-    "bundle": { "patch": "./cordis.patch.yml" },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
     "client": {
       "platform": "web",
       "external": []
@@ -64,12 +70,26 @@
     "schemaVersion": 1,
     "displayName": "Huabu 画布能力",
     "summary": "在 DSH 里做视觉项目：图片/视频生成、素材库、确定性粗模运镜预演、视频抽帧理解。",
-    "categories": ["媒体", "视觉", "工具"],
-    "surfaces": ["host", "web"],
+    "categories": [
+      "媒体",
+      "视觉",
+      "工具"
+    ],
+    "surfaces": [
+      "host",
+      "web"
+    ],
     "capabilities": {
-      "provides": ["service:huabu.media", "service:huabu.assets", "service:huabu.blockout"]
+      "provides": [
+        "service:huabu.media",
+        "service:huabu.assets",
+        "service:huabu.blockout"
+      ]
     },
-    "compatibility": { "dsh": ">=0.2.0-rc.1 <0.3.0-0", "node": ">=20" },
+    "compatibility": {
+      "dsh": ">=0.2.0-rc.1 <0.3.0-0",
+      "node": ">=20"
+    },
     "permissions": {
       "network": [
         "https://dashscope.aliyuncs.com",
@@ -82,5 +102,14 @@
         "https://queue.fal.run"
       ]
     }
-  }
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/acefun29/dsh-huabu.git"
+  },
+  "bugs": {
+    "url": "https://github.com/acefun29/dsh-huabu/issues"
+  },
+  "homepage": "https://github.com/acefun29/dsh-huabu#readme"
 }
