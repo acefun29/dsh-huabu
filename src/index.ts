@@ -11,7 +11,9 @@ import { BlockoutService } from './services/blockout'
 import { AssetsService } from './services/assets'
 import { ProjectService } from './services/project'
 import { HUABU_SKILL_NAME, installSkillBundle } from './services/skills'
+import { assembleAssetTools } from './tools/assets'
 import { assembleBlockoutTool } from './tools/blockout'
+import { assembleContextTool } from './tools/context'
 
 export const name = 'huabu'
 // attachments 必须在 inject 里声明，否则 ctx.attachments 不可访问
@@ -192,6 +194,10 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   ctx.provide('huabu.blockout', blockout)
   ctx.tools?.register(assembleBlockoutTool(ctx, blockout))
 
+  // C3：素材库三件套 + 上下文工具（服务在 huabu.assets / huabu.project）
+  for (const tool of assembleAssetTools(ctx, assets)) ctx.tools?.register(tool)
+  ctx.tools?.register(assembleContextTool(ctx, assets))
+
   // B5：幂等安装技能（$DSH_HOME/skills/huabu-blockout）；失败不阻断插件
   const installSkills = (config as { installSkills?: boolean } | undefined)?.installSkills !== false
   if (installSkills) {
@@ -207,7 +213,7 @@ export function apply(ctx: DshHostContext, config: unknown): void {
     }
   }
 
-  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, probes (A4)`)
+  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, asset tools + huabu_context (C3), probes (A4)`)
 
   ctx.tools?.register({
     name: 'huabu_probe',

@@ -24,6 +24,7 @@ pnpm test:skills    # 技能安装单测（版本戳/幂等/缺失修复）
 pnpm test:card      # BlockoutCard 解析单测（header/JSON/动作/指标格式）
 pnpm test:project   # huabu.project 单测（workspace.json/路径白名单/apply 注册）
 pnpm test:assets    # huabu.assets 单测（分类表/归档/命名库/标签索引/搜索）
+pnpm test:asset-tools # 素材工具三件套 + huabu_context 单测（参数/文本渲染/端到端）
 pnpm check:drift    # src/blockout 与 sha256 清单 / 上游的一致性
 ```
 

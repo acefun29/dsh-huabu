@@ -38,6 +38,7 @@
     "test:card": "node scripts/test-card.mjs",
     "test:project": "node scripts/test-project.mjs",
     "test:assets": "node scripts/test-assets.mjs",
+    "test:asset-tools": "node scripts/test-asset-tools.mjs",
     "check:drift": "node scripts/check-drift.mjs",
     "probe:ui": "node scripts/ui-probe.mjs",
     "probe:theme": "node scripts/ui-probe.mjs --theme"
