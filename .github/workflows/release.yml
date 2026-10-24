@@ -19,6 +19,10 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
+      - name: 安装 ffmpeg（视频理解与 mock 视频测试依赖）
+        uses: FedericoCarboni/setup-ffmpeg@v1
+        with:
+          github-token: ${{ github.token }}
       - run: pnpm install --frozen-lockfile
       - name: 全部门禁（typecheck/build/引擎/漂移/全部单测/体积守卫/兼容冒烟）
         run: node scripts/test-all.mjs
