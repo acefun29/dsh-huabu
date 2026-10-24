@@ -36,6 +36,20 @@ const MOCK_PROVIDER_DEF: BuiltinProviderDef = {
       capabilities: { ratios: ['1:1', '16:9', '9:16', '4:3', '3:4'], refQuota: [{ role: 'reference_image', max: 4 }] },
       costHint: '免费（本地像素，不联网）',
     },
+    {
+      id: 'mock/clip',
+      kind: 'video',
+      label: 'Mock 短片',
+      capabilities: { ratios: ['16:9', '9:16'], durations: [4, 6, 8], refQuota: [{ role: 'first_frame', max: 1 }] },
+      costHint: '免费（本地 ffmpeg，不联网）',
+    },
+    {
+      id: 'mock/voice',
+      kind: 'audio',
+      label: 'Mock 音频',
+      capabilities: { durations: [4, 8] },
+      costHint: '免费（本地合成，不联网）',
+    },
   ],
 }
 
@@ -51,6 +65,7 @@ export interface MediaProject {
   readonly mediaDir: string
   submit(request: Parameters<MediaJobManager['submit']>[0]): Promise<{ jobId: string }>
   waitForCompletion(jobId: string, opts?: Parameters<MediaJobManager['waitForCompletion']>[1]): Promise<MediaJobStatus>
+  cancel(jobId: string): Promise<boolean>
   list(): MediaJobStatus[]
 }
 
@@ -138,6 +153,7 @@ export class MediaService {
       mediaDir,
       submit: (request) => manager.submit(request),
       waitForCompletion: (jobId, opts) => manager.waitForCompletion(jobId, opts),
+      cancel: (jobId) => manager.cancel(jobId),
       list: () => manager.list(),
     }
     this.cache.set(project.root, { mediaProject, configFingerprint: fingerprint })

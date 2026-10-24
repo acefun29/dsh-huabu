@@ -25,6 +25,9 @@ export interface ImageToolExecLike {
   cwd?: string
   agent?: unknown
   signal?: AbortSignal
+  /** DSH 工具调用的 call/rootCall id（jobs 的 toolCall 关联用；宿主提供时有值） */
+  callId?: string
+  rootCallId?: string
 }
 
 export interface ImageAttachmentRef {

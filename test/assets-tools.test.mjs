@@ -132,3 +132,18 @@ test('summarizeAssets：计数/最近条目/签名稳定性（C4 未变化判空
   assert.equal(first.signature, again.signature, '状态未变签名一致')
   assert.match(contextText(assets), /素材库（共 1 个文件）/)
 })
+
+test('mediaJobsSummary/contextText：重启中断任务在态势里点名（E3）', (t) => {
+  const parent = mkdtempSync(join(realpathSync(tmpdir()), 'huabu-e3-'))
+  const root = join(parent, 'ws')
+  mkdirSync(root, { recursive: true })
+  t.after(() => rmSync(parent, { recursive: true, force: true, maxRetries: 5, retryDelay: 50 }))
+  const assets = new Assets(new Project(realpathSync.native(root)))
+  const jobs = [
+    { kind: 'video', state: 'failed', error: '应用重启，任务已中断；请重新提交', jobId: 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee' },
+    { kind: 'video', state: 'succeeded', jobId: 'ffffffff-1111-2222-3333-444444444444' },
+  ]
+  const text = contextText(assets, 'all', jobs)
+  assert.match(text, /生成任务：共 2 条/)
+  assert.match(text, /重启中断：aaaaaaaa/)
+})

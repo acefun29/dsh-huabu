@@ -41,6 +41,7 @@
     "test:asset-tools": "node scripts/test-asset-tools.mjs",
     "test:media": "node scripts/test-media.mjs",
     "test:image": "node scripts/test-image.mjs",
+    "test:video": "node scripts/test-video.mjs",
     "check:drift": "node scripts/check-drift.mjs",
     "probe:ui": "node scripts/ui-probe.mjs",
     "probe:theme": "node scripts/ui-probe.mjs --theme"

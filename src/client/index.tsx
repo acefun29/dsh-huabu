@@ -16,6 +16,7 @@ import themeCss from './theme.css'
 import { useAttachmentImages } from './attachments'
 import { BlockoutCard } from './blockout-card'
 import { ImageCard } from './image-card'
+import { MediaJobCard } from './video-card'
 
 // layout 服务由宿主 ui-layout 提供（面板切换用），必须先 inject 才能访问 ctx.layout
 export const inject = ['slots', 'locale', 'layout']
@@ -165,6 +166,12 @@ export function apply(ctx: Any): void {
   // D3：图片生成工具卡（复用 blockout 卡的读数/参数样式，图走 grid）
   ctx.slots.inject('tool.call.toolview', () =>
     ctx.slots.register({ name: 'tool.call.toolview', key: 'huabu_image_generate' }, ImageCard))
+
+  // E4：视频/音频生成卡（同组件按 key 注册两次）
+  ctx.slots.inject('tool.call.toolview', () =>
+    ctx.slots.register({ name: 'tool.call.toolview', key: 'huabu_video_generate' }, MediaJobCard))
+  ctx.slots.inject('tool.call.toolview', () =>
+    ctx.slots.register({ name: 'tool.call.toolview', key: 'huabu_audio_generate' }, MediaJobCard))
 
   // A5 · G4d：main 的 key 与 sidebar.panellist 的 id 用同一常量绑定。
   // 宿主点击侧栏行 → ctx.layout.selectPanel(id) → 在 keyed 槽 `main` 里按 key 取面板。

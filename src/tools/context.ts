@@ -1,6 +1,8 @@
 // C3 huabu_context 工具：模型不确定项目里有什么时主动取全量态势。
 // 每轮注入的短摘要（C4）与这里共用 services/context.ts 的构建口径。
+// E3：接 huabu.media 后追加生成任务态势（含重启对账的 interrupted 点名）。
 import type { AssetsService } from '../services/assets'
+import type { MediaService } from '../services/media'
 import { contextText } from '../services/context'
 import type { WorkingDirectoryLike } from '../services/session-cwd'
 
@@ -25,12 +27,16 @@ export interface ContextToolValue {
 
 const SCOPES = ['assets', 'board', 'all'] as const
 
-export function assembleContextTool(ctx: ContextToolContext, service: Pick<AssetsService, 'forExec'>) {
+export function assembleContextTool(
+  ctx: ContextToolContext,
+  service: Pick<AssetsService, 'forExec'>,
+  media?: Pick<MediaService, 'forExec'>,
+) {
   return {
     name: CONTEXT_TOOL_NAME,
     description:
-      '查看 Huabu 项目态势：素材库摘要（按分类计数 + 最近条目）与画布状态。' +
-      '不确定项目里有什么素材/产物时调它；只要清单明细用 huabu_asset_list。',
+      '查看 Huabu 项目态势：素材库摘要（按分类计数 + 最近条目）、画布状态与生成任务（含重启中断的对账结果）。' +
+      '不确定项目里有什么素材/产物/任务时调它；只要清单明细用 huabu_asset_list。',
     parameters: {
       type: 'object',
       properties: {
@@ -58,10 +64,18 @@ export function assembleContextTool(ctx: ContextToolContext, service: Pick<Asset
         throw new Error(`未知 scope：「${String(scope)}」；可用：${SCOPES.join(' / ')}`)
       }
       const assets = await service.forExec(ctx, exec)
+      const jobs = media
+        ? (await media.forExec(ctx, exec)).list().map((job) => ({
+            kind: job.kind,
+            state: job.state,
+            ...(job.error ? { error: job.error } : {}),
+            jobId: job.jobId,
+          }))
+        : []
       const value: ContextToolValue = {
         tool: CONTEXT_TOOL_NAME,
         ok: true,
-        text: contextText(assets, scope as (typeof SCOPES)[number]),
+        text: contextText(assets, scope as (typeof SCOPES)[number], jobs),
       }
       return JSON.parse(JSON.stringify(value)) as ContextToolValue
     },

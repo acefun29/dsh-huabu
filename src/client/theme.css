@@ -536,3 +536,18 @@ body[data-ds-dark-theme] .huabu-bk-img {
   border: 1px solid var(--dsw-alias-border-subtle);
   background: var(--dsw-alias-bg-base);
 }
+
+
+/* ── E4 MediaJobCard：复用 huabu-bk-* 读数/参数/进度样式，仅容器独立 ── */
+
+.huabu-video-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--huabu-card-gap, 6px);
+  max-height: var(--huabu-card-max-height, 360px);
+  overflow-y: auto;
+  padding: var(--huabu-card-padding, 8px);
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: var(--huabu-card-radius, 8px);
+  background: var(--dsw-alias-bg-sunken, transparent);
+}

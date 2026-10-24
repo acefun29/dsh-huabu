@@ -17,6 +17,7 @@ import { assembleAssetTools } from './tools/assets'
 import { assembleBlockoutTool } from './tools/blockout'
 import { assembleContextTool } from './tools/context'
 import { assembleImageTool } from './tools/image'
+import { assembleAudioTool, assembleVideoTool } from './tools/video'
 
 export const name = 'huabu'
 // attachments 必须在 inject 里声明，否则 ctx.attachments 不可访问
@@ -211,12 +212,16 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   ctx.provide('huabu.blockout', blockout)
   ctx.tools?.register(assembleBlockoutTool(ctx, blockout))
 
-  // C3：素材库三件套 + 上下文工具（服务在 huabu.assets / huabu.project）
+  // C3：素材库三件套 + 上下文工具（服务在 huabu.assets / huabu.project；E3 起含任务态势）
   for (const tool of assembleAssetTools(ctx, assets)) ctx.tools?.register(tool)
-  ctx.tools?.register(assembleContextTool(ctx, assets))
+  ctx.tools?.register(assembleContextTool(ctx, assets, media))
 
   // D2：图片生成工具（默认走 mock 供应商，零 Key 可用）
   ctx.tools?.register(assembleImageTool(ctx, media))
+
+  // E1/E2/E5：视频/音频生成（确认闸门 + ctx.jobs 后台任务）
+  ctx.tools?.register(assembleVideoTool(ctx, media))
+  ctx.tools?.register(assembleAudioTool(ctx, media))
 
   // C4：每轮摘要注入。text 回调必须同步，cwd 经 WeakMap 缓存 + 异步预热（首轮可能为空）
   const digestOptions = (config as {

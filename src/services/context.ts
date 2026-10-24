@@ -83,10 +83,28 @@ export function boardSummary(): string {
   return '画布：未启用（Huabu 画布 UI 属 v0.2；当前以素材库 + blockout 产物目录为准）'
 }
 
-/** huabu_context 的全量文本 */
-export function contextText(assets: Assets, scope: 'assets' | 'board' | 'all' = 'all'): string {
+/** 媒体任务态势（E3）：按状态计数 + 重启中断/失败任务点名（对账可见性） */
+export function mediaJobsSummary(jobs: Array<{ kind: string; state: string; error?: string; jobId: string }>): string {
+  if (jobs.length === 0) return '生成任务：无'
+  const byState = new Map<string, number>()
+  for (const job of jobs) byState.set(job.state, (byState.get(job.state) ?? 0) + 1)
+  const counts = [...byState.entries()].map(([state, n]) => `${state} ${n}`).join(' / ')
+  const interrupted = jobs
+    .filter((job) => job.state === 'failed' && (job.error ?? '').includes('中断'))
+    .slice(-3)
+    .map((job) => job.jobId.slice(0, 8))
+  return `生成任务：共 ${jobs.length} 条（${counts}）${interrupted.length ? `；重启中断：${interrupted.join('、')}（如需继续请重新提交）` : ''}`
+}
+
+/** huabu_context 的全量文本（E3 起含媒体任务态势） */
+export function contextText(
+  assets: Assets,
+  scope: 'assets' | 'board' | 'all' = 'all',
+  jobs: Array<{ kind: string; state: string; error?: string; jobId: string }> = [],
+): string {
   const lines: string[] = []
   if (scope === 'assets' || scope === 'all') lines.push(summarizeAssets(assets).text)
   if (scope === 'board' || scope === 'all') lines.push(boardSummary())
+  if ((scope === 'all' || scope === 'assets') && jobs.length > 0) lines.push(mediaJobsSummary(jobs))
   return lines.join('\n')
 }

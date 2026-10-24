@@ -23,6 +23,7 @@ for (const [entry, out] of bundles) {
     format: 'esm',
     target: 'node20',
     outfile: join(pkgRoot, 'lib', out),
+    external: ['ffmpeg-static'],
     logLevel: 'error',
   })
 }
