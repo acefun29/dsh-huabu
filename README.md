@@ -85,6 +85,8 @@ dsh plugin --profile <profile> add https://github.com/acefun29/dsh-huabu/release
 # 或始终跟最新版（资产名带版本号，latest 短链需先到 Releases 页查看文件名）
 ```
 
+> 注：DSH 内置 pnpm v11 对含安装脚本的依赖（ffmpeg-static）会提示 `pnpm approve-builds` 并以非零码结束——插件本体已正常装入，忽略即可；ffmpeg 走 PATH 探测不受影响。
+
 **开发调试（本地目录直连）**：
 
 ```powershell
