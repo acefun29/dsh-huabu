@@ -23,6 +23,7 @@ const steps = [
   ['image tests', ['pnpm', ['test:image']]],
   ['video tests', ['pnpm', ['test:video']]],
   ['vision tests', ['pnpm', ['test:vision']]],
+  ['compat smoke', ['node', ['scripts/smoke.mjs']]],
 ]
 
 let failed = 0
