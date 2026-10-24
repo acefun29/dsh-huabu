@@ -29,12 +29,17 @@ function makeKit(t) {
   return { parent, root: realRoot, project }
 }
 
-/** 生成测试视频（PATH ffmpeg，lavfi 测试图 4s） */
+/** 生成测试视频（PATH ffmpeg，lavfi 测试图 4s）；where 不可用时回退直接探测 */
 function makeTestVideo(dir, name = 'clip.mp4', seconds = 4) {
   const target = join(dir, name)
   const where = spawnSync('where', ['ffmpeg'], { windowsHide: true })
-  const ffmpeg = (where.stdout ?? '').toString().split('\n').map((l) => l.trim()).find(Boolean)
-  if (!ffmpeg) throw new Error('测试环境无 PATH ffmpeg')
+  const hit = (where.stdout ?? '').toString().split(/\r?\n/).map((l) => l.trim()).filter(Boolean)[0]
+  let ffmpeg = hit && existsSync(hit) ? hit : undefined
+  if (!ffmpeg) {
+    const probe = spawnSync('ffmpeg', ['-version'], { windowsHide: true, timeout: 15_000 })
+    if (probe.status === 0) ffmpeg = 'ffmpeg'
+  }
+  if (!ffmpeg) throw new Error('测试环境无 PATH ffmpeg（where 与直接探测均失败）')
   const run = spawnSync(
     ffmpeg,
     ['-hide_banner', '-loglevel', 'error', '-y', '-f', 'lavfi', '-i', `testsrc2=size=320x180:rate=10:duration=${seconds}`, '-pix_fmt', 'yuv420p', target],

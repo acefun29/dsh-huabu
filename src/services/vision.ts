@@ -44,8 +44,11 @@ export function resolveFfmpeg(config: VisionConfig = {}): FfmpegSource | null {
     windowsHide: true,
     timeout: 10_000,
   })
-  const hit = (which.stdout ?? '').toString().split('\n').map((line) => line.trim()).find(Boolean)
+  const hit = (which.stdout ?? '').toString().split(/\r?\n/).map((line) => line.trim()).find(Boolean)
   if (hit && existsSync(hit)) return { path: hit, source: 'PATH' }
+  // where/which 在部分环境（CI runner）不可用：直接探测可执行（PATH 由 CreateProcess 解析）
+  const probe = spawnSync('ffmpeg', ['-version'], { windowsHide: true, timeout: 10_000 })
+  if (probe.status === 0) return { path: 'ffmpeg', source: 'PATH' }
   return null
 }
 
