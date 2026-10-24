@@ -10,6 +10,7 @@ const bundles = [
   ['src/services/assets.ts', '.assets-service.test.mjs'],
   ['src/services/project.ts', '.project-service.test.mjs'],
   ['src/services/context.ts', '.context-service.test.mjs'],
+  ['src/services/digest.ts', '.digest.test.mjs'],
   ['src/tools/assets.ts', '.asset-tools.test.mjs'],
   ['src/tools/context.ts', '.context-tool.test.mjs'],
   ['src/index.ts', '.index-apply.test.mjs'],
@@ -30,7 +31,7 @@ for (const [entry, out] of bundles) {
 
 const result = spawnSync(
   process.execPath,
-  ['--test', 'test/assets-tools.test.mjs', 'test/index-apply.test.mjs'],
+  ['--test', 'test/assets-tools.test.mjs', 'test/digest.test.mjs', 'test/index-apply.test.mjs'],
   { cwd: pkgRoot, stdio: 'inherit' },
 )
 for (const [, out] of bundles) await rm(join(pkgRoot, 'lib', out), { force: true })

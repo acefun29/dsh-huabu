@@ -7,6 +7,7 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
   const provided = new Map()
   const tools = []
   const logs = []
+  const promptContexts = []
   const ctx = {
     provide(name, value) {
       provided.set(name, value)
@@ -14,6 +15,11 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
     tools: {
       register(def) {
         tools.push(def)
+      },
+    },
+    systemPrompt: {
+      context(entry) {
+        promptContexts.push(entry)
       },
     },
     logger: {
@@ -47,4 +53,40 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
   )
   assert.match(logs.join('\n'), /huabu\.project 0\.1\.0/)
   assert.match(logs.join('\n'), /huabu\.assets 0\.1\.0/)
+})
+
+test('apply：C4 摘要注入注册（systemPrompt.context，text 同步且未知 agent 返回空串）', () => {
+  const promptContexts = []
+  const ctx = {
+    provide() {},
+    tools: { register() {} },
+    systemPrompt: {
+      context(entry) {
+        promptContexts.push(entry)
+      },
+    },
+    logger: {},
+  }
+  apply(ctx, { installSkills: false })
+  const digest = promptContexts.find((entry) => entry.name === 'huabu:project-digest')
+  assert.ok(digest, 'huabu:project-digest 未注册')
+  assert.equal(typeof digest.order, 'number')
+  assert.equal(digest.interpolate, false)
+  const value = digest.text({ agent: { id: 'unknown-agent' } })
+  assert.equal(typeof value, 'string')
+  assert.equal(value, '', '未知 agent 首轮必须同步返回空串')
+
+  const disabled = []
+  const offCtx = {
+    provide() {},
+    tools: { register() {} },
+    systemPrompt: {
+      context(entry) {
+        disabled.push(entry)
+      },
+    },
+    logger: {},
+  }
+  apply(offCtx, { installSkills: false, injectDigest: false })
+  assert.equal(disabled.filter((entry) => entry.name === 'huabu:project-digest').length, 0, 'injectDigest=false 时不注册')
 })

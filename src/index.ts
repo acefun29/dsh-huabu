@@ -9,6 +9,7 @@ import { deflateSync } from 'node:zlib'
 import path from 'node:path'
 import { BlockoutService } from './services/blockout'
 import { AssetsService } from './services/assets'
+import { DEFAULT_DIGEST_CONFIG, DIGEST_CONTEXT_NAME, DIGEST_CONTEXT_ORDER, ProjectDigest } from './services/digest'
 import { ProjectService } from './services/project'
 import { HUABU_SKILL_NAME, installSkillBundle } from './services/skills'
 import { assembleAssetTools } from './tools/assets'
@@ -19,7 +20,8 @@ export const name = 'huabu'
 // attachments 必须在 inject 里声明，否则 ctx.attachments 不可访问
 // （A4 实测报错：cannot get property "attachments" without inject）
 // workingDirectory 提供会话工作区（B2 契约 #5：exec.cwd 不是会话 cwd）
-export const inject = ['tools', 'commands', 'attachments', 'workingDirectory']
+// systemPrompt 用于 C4 每轮摘要注入（dsh-system-prompt 宿主服务）
+export const inject = ['tools', 'commands', 'attachments', 'workingDirectory', 'systemPrompt']
 
 export const Config = z.object({
   installSkills: z.boolean().default(true),
@@ -93,6 +95,14 @@ interface DshHostContext extends Context {
   tools?: { register(def: DshToolDef): unknown }
   attachments?: { saveImage(input: unknown): Promise<unknown> }
   workingDirectory?: { ensure(agent: unknown, signal?: AbortSignal): Promise<string> }
+  systemPrompt?: {
+    context(entry: {
+      name: string
+      order: number
+      interpolate?: boolean
+      text: (context: { agent?: unknown; signal?: AbortSignal }) => string
+    }): unknown
+  }
 }
 
 /* ── 探针执行：写 PNG → 尽量做 attachment ───────────────── */
@@ -198,6 +208,32 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   for (const tool of assembleAssetTools(ctx, assets)) ctx.tools?.register(tool)
   ctx.tools?.register(assembleContextTool(ctx, assets))
 
+  // C4：每轮摘要注入。text 回调必须同步，cwd 经 WeakMap 缓存 + 异步预热（首轮可能为空）
+  const digestOptions = (config as {
+    injectDigest?: boolean
+    digestBudgetTokens?: number
+    digestMinIntervalMs?: number
+  }) ?? {}
+  const digest = new ProjectDigest(project, {
+    budgetTokens: Number.isFinite(digestOptions.digestBudgetTokens)
+      ? Math.max(50, Math.floor(digestOptions.digestBudgetTokens as number))
+      : DEFAULT_DIGEST_CONFIG.budgetTokens,
+    minIntervalMs: Number.isFinite(digestOptions.digestMinIntervalMs)
+      ? Math.max(0, Math.floor(digestOptions.digestMinIntervalMs as number))
+      : DEFAULT_DIGEST_CONFIG.minIntervalMs,
+  })
+  if (digestOptions.injectDigest !== false && ctx.systemPrompt) {
+    ctx.systemPrompt.context({
+      name: DIGEST_CONTEXT_NAME,
+      order: DIGEST_CONTEXT_ORDER,
+      interpolate: false,
+      text: (c) => {
+        void digest.warm(c?.agent, (agent, signal) => ctx.workingDirectory!.ensure(agent, signal))
+        return digest.text(c?.agent)
+      },
+    })
+  }
+
   // B5：幂等安装技能（$DSH_HOME/skills/huabu-blockout）；失败不阻断插件
   const installSkills = (config as { installSkills?: boolean } | undefined)?.installSkills !== false
   if (installSkills) {
@@ -213,7 +249,7 @@ export function apply(ctx: DshHostContext, config: unknown): void {
     }
   }
 
-  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, asset tools + huabu_context (C3), probes (A4)`)
+  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, asset tools + huabu_context (C3), digest (C4), probes (A4)`)
 
   ctx.tools?.register({
     name: 'huabu_probe',
