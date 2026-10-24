@@ -1,0 +1,8 @@
+# dsh-huabu bundle patch：一行 host 插件（client 半自动挂到同名包行）
+- insert:
+    - id: huabu
+      name: dsh-huabu
+      # 用户在 profile 的 cordis.patch.yml 里按 id: huabu 覆盖 config：
+      # config:
+      #   media:
+      #     confirmVideo: true

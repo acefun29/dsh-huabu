@@ -1,0 +1,19 @@
+# 依赖与构建产物
+node_modules/
+lib/
+
+# 运行期用户数据（探针/产物落盘）
+.huabu/
+
+# 冒烟截图（本地证据，不入库）
+smoke/
+
+# 本地开发文档（含本机路径，不入库）
+dev-plan.md
+dsh-plugin-implementation-plan.md
+huabu-plugin-prototype.html
+
+# 本地环境 / 日志
+.env
+.env.local
+*.log

@@ -1,0 +1,34 @@
+{
+  "blockout": {
+    "vendored": "src/blockout",
+    "upstream": "../src/main/blockout",
+    "upstreamCommit": "72dda9a",
+    "vendoredAt": "2026-10-20",
+    "vendoredFiles": {
+      "README.md": "c1d1ff192ed33834f42c7083c3cd2f2a6b687300250d29e65e8ee3484e4ea7e0",
+      "cli.mjs": "8232e3d9d74ca624ac8686f61895ce4a23ac2c815b28e6de83a20e2ee0568381",
+      "expr.mjs": "0b88375c95dc03bbdf94699ae28864e4915d72a3860b0fdfdbef2cbaa53cdfd7",
+      "font.mjs": "766cd603e259ae69b3db6027e98f321a63462456f097d1d2d1d40d1e7998ea80",
+      "geom.mjs": "419e2fb8b6304db62101a7e8aa31699a5a00c658e50f6578522900b756b12558",
+      "motion.mjs": "ea0226d2ce2f649a8881b120b46a30ce5cff2ccb6cf9ec7e4d8a50d2343d4cfd",
+      "render.mjs": "584e22431d6a50c5438b7f503011e90252e4976d4a973b5cc4d0e963b6092f4d",
+      "resolve.mjs": "e56b6f1ccb6e06cea870f358cccd9946560a1e34fe066b30b21a17b77d6e4204",
+      "selftest.mjs": "d3a1ac448cd2be46fc603dbdb7446ac4c6acfd9f036d577009fc7d8522a8bcf4",
+      "sheet.mjs": "a140c4f09f91ec6ac03c44ea8c167a1b1ad4e95d0d9a99411e9cf65720e2e96d",
+      "views.mjs": "56c8b8d3ff25af33b997249bd24e2772540c5e7ceec9d197f12a95e19fd17aad"
+    },
+    "upstreamFiles": {
+      "README.md": "c1d1ff192ed33834f42c7083c3cd2f2a6b687300250d29e65e8ee3484e4ea7e0",
+      "cli.mjs": "8232e3d9d74ca624ac8686f61895ce4a23ac2c815b28e6de83a20e2ee0568381",
+      "expr.mjs": "0b88375c95dc03bbdf94699ae28864e4915d72a3860b0fdfdbef2cbaa53cdfd7",
+      "font.mjs": "766cd603e259ae69b3db6027e98f321a63462456f097d1d2d1d40d1e7998ea80",
+      "geom.mjs": "419e2fb8b6304db62101a7e8aa31699a5a00c658e50f6578522900b756b12558",
+      "motion.mjs": "ea0226d2ce2f649a8881b120b46a30ce5cff2ccb6cf9ec7e4d8a50d2343d4cfd",
+      "render.mjs": "584e22431d6a50c5438b7f503011e90252e4976d4a973b5cc4d0e963b6092f4d",
+      "resolve.mjs": "e56b6f1ccb6e06cea870f358cccd9946560a1e34fe066b30b21a17b77d6e4204",
+      "selftest.mjs": "d3a1ac448cd2be46fc603dbdb7446ac4c6acfd9f036d577009fc7d8522a8bcf4",
+      "sheet.mjs": "a140c4f09f91ec6ac03c44ea8c167a1b1ad4e95d0d9a99411e9cf65720e2e96d",
+      "views.mjs": "56c8b8d3ff25af33b997249bd24e2772540c5e7ceec9d197f12a95e19fd17aad"
+    }
+  }
+}
