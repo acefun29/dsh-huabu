@@ -10,7 +10,7 @@ const bundles = [
   ['src/tools/video.ts', '.video-tool.test.mjs'],
   ['src/services/media.ts', '.media-service.test.mjs'],
   ['src/services/project.ts', '.project-service.test.mjs'],
-  ['src/client/video-card.tsx', '.video-card.test.mjs'],
+  ['src/client/video-job-parse.ts', '.video-card.test.mjs'],
   ['src/index.ts', '.index-apply.test.mjs'],
 ]
 

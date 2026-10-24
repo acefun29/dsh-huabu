@@ -1,0 +1,2 @@
+# 本仓按字节一致性校验（check-drift 的 sha256 清单）：禁用一切 EOL 转换
+* -text
