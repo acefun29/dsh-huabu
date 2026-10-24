@@ -8,6 +8,7 @@ import { mkdir, writeFile } from 'node:fs/promises'
 import { deflateSync } from 'node:zlib'
 import path from 'node:path'
 import { BlockoutService } from './services/blockout'
+import { AssetsService } from './services/assets'
 import { ProjectService } from './services/project'
 import { HUABU_SKILL_NAME, installSkillBundle } from './services/skills'
 import { assembleBlockoutTool } from './tools/blockout'
@@ -182,6 +183,10 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   const project = new ProjectService()
   ctx.provide('huabu.project', project)
 
+  // C2：素材域服务（归档/命名库/标签索引/搜索），落盘走 huabu.project 的白名单
+  const assets = new AssetsService(project)
+  ctx.provide('huabu.assets', assets)
+
   // B2：引擎服务先注册；B3 工具经闭包使用它
   const blockout = new BlockoutService()
   ctx.provide('huabu.blockout', blockout)
@@ -202,7 +207,7 @@ export function apply(ctx: DshHostContext, config: unknown): void {
     }
   }
 
-  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.blockout ${blockout.version}, huabu_blockout, probes (A4)`)
+  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, probes (A4)`)
 
   ctx.tools?.register({
     name: 'huabu_probe',
