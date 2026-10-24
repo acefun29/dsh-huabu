@@ -38,6 +38,8 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
   assert.equal(provided.get('huabu.project').version, '0.1.0')
   assert.ok(provided.get('huabu.assets'), 'huabu.assets 未注册')
   assert.equal(provided.get('huabu.assets').version, '0.1.0')
+  assert.ok(provided.get('huabu.media'), 'huabu.media 未注册')
+  assert.equal(provided.get('huabu.media').version, '0.1.0')
   assert.ok(provided.get('huabu.blockout'), 'huabu.blockout 未注册')
   assert.deepEqual(
     tools.map((item) => item.name).sort(),
@@ -47,6 +49,7 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
       'huabu_asset_tag',
       'huabu_blockout',
       'huabu_context',
+      'huabu_image_generate',
       'huabu_probe',
       'huabu_probe_plain',
     ],

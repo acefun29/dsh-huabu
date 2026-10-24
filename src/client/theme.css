@@ -500,3 +500,39 @@ body[data-ds-dark-theme] .huabu-bk-img {
   font-size: 11px;
   white-space: pre-wrap;
 }
+
+
+/* ── D3 ImageCard：与 blockout 卡共用 huabu-bk-* 读数样式，图区用独立 grid ── */
+
+.huabu-image-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--huabu-card-gap, 6px);
+  max-height: var(--huabu-card-max-height, 360px);
+  overflow-y: auto;
+  padding: var(--huabu-card-padding, 8px);
+  border: 1px solid var(--dsw-alias-border-subtle);
+  border-radius: var(--huabu-card-radius, 8px);
+  background: var(--dsw-alias-bg-sunken, transparent);
+}
+
+.huabu-im-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--huabu-card-gap, 6px);
+}
+
+.huabu-im-grid:has(> :only-child) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.huabu-im-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: var(--huabu-image-max-height, 240px);
+  object-fit: contain;
+  border-radius: calc(var(--huabu-card-radius, 8px) - 3px);
+  border: 1px solid var(--dsw-alias-border-subtle);
+  background: var(--dsw-alias-bg-base);
+}

@@ -10,11 +10,13 @@ import path from 'node:path'
 import { BlockoutService } from './services/blockout'
 import { AssetsService } from './services/assets'
 import { DEFAULT_DIGEST_CONFIG, DIGEST_CONTEXT_NAME, DIGEST_CONTEXT_ORDER, ProjectDigest } from './services/digest'
+import { MediaService } from './services/media'
 import { ProjectService } from './services/project'
-import { HUABU_SKILL_NAME, installSkillBundle } from './services/skills'
+import { installAllSkillBundles } from './services/skills'
 import { assembleAssetTools } from './tools/assets'
 import { assembleBlockoutTool } from './tools/blockout'
 import { assembleContextTool } from './tools/context'
+import { assembleImageTool } from './tools/image'
 
 export const name = 'huabu'
 // attachments 必须在 inject 里声明，否则 ctx.attachments 不可访问
@@ -199,6 +201,11 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   const assets = new AssetsService(project)
   ctx.provide('huabu.assets', assets)
 
+  // D1：媒体生成服务（移植自主仓库 src/main/media；凭据 = 插件配置明文 Key 或环境变量）
+  const mediaKeys = (config as { media?: { apiKeys?: Record<string, string> } } | undefined)?.media?.apiKeys
+  const media = new MediaService(project, mediaKeys ? { apiKeys: mediaKeys } : {})
+  ctx.provide('huabu.media', media)
+
   // B2：引擎服务先注册；B3 工具经闭包使用它
   const blockout = new BlockoutService()
   ctx.provide('huabu.blockout', blockout)
@@ -207,6 +214,9 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   // C3：素材库三件套 + 上下文工具（服务在 huabu.assets / huabu.project）
   for (const tool of assembleAssetTools(ctx, assets)) ctx.tools?.register(tool)
   ctx.tools?.register(assembleContextTool(ctx, assets))
+
+  // D2：图片生成工具（默认走 mock 供应商，零 Key 可用）
+  ctx.tools?.register(assembleImageTool(ctx, media))
 
   // C4：每轮摘要注入。text 回调必须同步，cwd 经 WeakMap 缓存 + 异步预热（首轮可能为空）
   const digestOptions = (config as {
@@ -234,22 +244,23 @@ export function apply(ctx: DshHostContext, config: unknown): void {
     })
   }
 
-  // B5：幂等安装技能（$DSH_HOME/skills/huabu-blockout）；失败不阻断插件
+  // B5/D3：幂等安装技能（$DSH_HOME/skills/huabu-blockout + huabu-media）；失败不阻断插件
   const installSkills = (config as { installSkills?: boolean } | undefined)?.installSkills !== false
   if (installSkills) {
     try {
-      const skill = installSkillBundle()
-      ctx.logger?.info?.(
-        `dsh-huabu skills: ${HUABU_SKILL_NAME} ${skill.status} v${skill.version} -> ${skill.targetDir}`,
-      )
+      for (const skill of installAllSkillBundles()) {
+        ctx.logger?.info?.(
+          `dsh-huabu skills: ${skill.status === 'installed' ? '安装' : '已是最新'} ${skill.targetDir}（v${skill.version}${skill.copied.length ? `，写入 ${skill.copied.length} 文件` : ''}）`,
+        )
+      }
     } catch (error) {
       ctx.logger?.warn?.(
-        `dsh-huabu skills: 安装 ${HUABU_SKILL_NAME} 失败：${error instanceof Error ? error.message : String(error)}`,
+        `dsh-huabu skills: 安装技能失败：${error instanceof Error ? error.message : String(error)}`,
       )
     }
   }
 
-  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.blockout ${blockout.version}, huabu_blockout, asset tools + huabu_context (C3), digest (C4), probes (A4)`)
+  ctx.logger?.info?.(`dsh-huabu applied: huabu.project ${project.version}, huabu.assets ${assets.version}, huabu.media ${media.version}, huabu.blockout ${blockout.version}, huabu_blockout, asset tools + huabu_context (C3), digest (C4), huabu_image_generate (D2), probes (A4)`)
 
   ctx.tools?.register({
     name: 'huabu_probe',
