@@ -18,6 +18,8 @@ import { assembleBlockoutTool } from './tools/blockout'
 import { assembleContextTool } from './tools/context'
 import { assembleImageTool } from './tools/image'
 import { assembleAudioTool, assembleVideoTool } from './tools/video'
+import { assembleVisionTools } from './tools/vision'
+import { VisionService } from './services/vision'
 
 export const name = 'huabu'
 // attachments 必须在 inject 里声明，否则 ctx.attachments 不可访问
@@ -222,6 +224,16 @@ export function apply(ctx: DshHostContext, config: unknown): void {
   // E1/E2/E5：视频/音频生成（确认闸门 + ctx.jobs 后台任务）
   ctx.tools?.register(assembleVideoTool(ctx, media))
   ctx.tools?.register(assembleAudioTool(ctx, media))
+
+  // F1-F3：视频理解（ffmpeg 探测链 config→env→ffmpeg-static→PATH；抽帧缓存 .huabu/vframes）
+  const ffmpegPath =
+    (config as { media?: { ffmpegPath?: string }; ffmpegPath?: string } | undefined)?.media?.ffmpegPath ??
+    (config as { ffmpegPath?: string } | undefined)?.ffmpegPath
+  const vision = new VisionService(ffmpegPath ? { ffmpegPath } : {})
+  ctx.provide('huabu.vision', vision)
+  for (const tool of assembleVisionTools(ctx, vision, async (exec) => (await project.forExec(ctx, exec)))) {
+    ctx.tools?.register(tool)
+  }
 
   // C4：每轮摘要注入。text 回调必须同步，cwd 经 WeakMap 缓存 + 异步预热（首轮可能为空）
   const digestOptions = (config as {

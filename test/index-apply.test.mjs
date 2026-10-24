@@ -53,9 +53,12 @@ test('apply：注册 huabu.project / huabu.assets / huabu.blockout 与全部工�
       'huabu_image_generate',
       'huabu_probe',
       'huabu_probe_plain',
+      'huabu_video_frames',
       'huabu_video_generate',
+      'huabu_video_skim',
     ],
   )
+  assert.ok(provided.get('huabu.vision'), 'huabu.vision 未注册')
   assert.match(logs.join('\n'), /huabu\.project 0\.1\.0/)
   assert.match(logs.join('\n'), /huabu\.assets 0\.1\.0/)
 })
