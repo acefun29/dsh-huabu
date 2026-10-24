@@ -33,4 +33,4 @@ jobs:
           gh release create "$TAG" dsh-huabu-*.tgz \
             --title "dsh-huabu $TAG" \
             --generate-notes \
-            --notes "安装：dsh plugin --profile <profile> add https://github.com/acefun29/dsh-huabu/releases/download/$TAG/dsh-huabu-0.1.0.tgz"
+            --notes "安装：dsh plugin --profile <profile> add https://github.com/acefun29/dsh-huabu/releases/download/$TAG/dsh-huabu-${TAG#v}.tgz"
