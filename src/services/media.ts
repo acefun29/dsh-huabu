@@ -20,6 +20,7 @@ export const MEDIA_SERVICE_VERSION = '0.1.0'
 // 供工具层与单测共用（同一 bundle = 同一适配器注册表实例；分开打包会拿到未注册的空表）
 export { BUILTIN_PROVIDERS, mergeCatalog, PROVIDER_ID_PATTERN, MODEL_ID_PATTERN } from '../media/catalog'
 export { createAdapters, getAdapterTypes, isRegisteredAdapterType } from '../media/adapters/registry'
+export { MediaJobManager } from '../media/manager'
 
 /** 插件常驻 mock 供应商（上游 42db3cf 移除；插件侧用于单测与零 Key 演示） */
 const MOCK_PROVIDER_DEF: BuiltinProviderDef = {

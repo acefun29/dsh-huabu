@@ -84,6 +84,8 @@ export class MediaJobManager {
       resolveKey?: (auth: { authKey?: string; authEnv?: string }) => Promise<string | undefined>
       /** 素材库内容有变化的广播（产物落进库目录后调用，渲染端据此刷新素材库面板） */
       notifyAssetsChanged: () => void
+      /** 按 kind 覆盖整体超时毫秒（dsh-huabu 偏差：测试注入口；缺省用下方常量表） */
+      timeouts?: Partial<Record<'image' | 'video' | 'audio', number>>
     }
   ) {}
 
@@ -313,12 +315,13 @@ export class MediaJobManager {
   /** 单个任务的生命周期：提交 → 轮询（退避+超时） → 下载落盘 → 事件 */
   private async runJob(record: JobRecord): Promise<void> {
     const { status, adapter } = record
-    const { mediaDir } = this.context()
+    const ctx0 = this.context()
+    const { mediaDir } = ctx0
     if (!mediaDir) return this.finish(record, 'failed', undefined, '工作区已关闭，任务中止')
     // 落库目录优先于默认产物目录（jobs.json 索引仍放默认目录，只有产物文件换位）
     const artifactDir = record.outputDirAbs ?? mediaDir
     const startedAt = Date.now()
-    const timeoutMs = TIMEOUT_MS[status.kind] ?? 300_000
+    const timeoutMs = ctx0.timeouts?.[status.kind] ?? TIMEOUT_MS[status.kind] ?? 300_000
     let backoff = POLL_BASE_MS
     try {
       const remoteId = await adapter.submit(status.model, record.input)
@@ -483,7 +486,7 @@ export class MediaJobManager {
       state === 'succeeded' || state === 'failed' || state === 'cancelled'
     if (terminal(record.status.state)) return Promise.resolve({ ...record.status })
 
-    const timeoutMs = (TIMEOUT_MS[record.status.kind] ?? 300_000) + 30_000
+    const timeoutMs = (this.context().timeouts?.[record.status.kind] ?? TIMEOUT_MS[record.status.kind] ?? 300_000) + 30_000
     return new Promise<MediaJobStatus>((resolvePromise, rejectPromise) => {
       const timer = setTimeout(() => {
         cleanup()

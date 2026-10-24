@@ -27,7 +27,7 @@ for (const [entry, out] of bundles) {
 
 const result = spawnSync(
   process.execPath,
-  ['--test', 'test/media-service.test.mjs', 'test/index-apply.test.mjs'],
+  ['--test', 'test/media-service.test.mjs', 'test/media-fail.test.mjs', 'test/index-apply.test.mjs'],
   { cwd: pkgRoot, stdio: 'inherit' },
 )
 for (const [, out] of bundles) await rm(join(pkgRoot, 'lib', out), { force: true })
